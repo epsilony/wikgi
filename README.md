@@ -1,2 +1,4 @@
-wigit
-=====
+## wikgi ##
+
+a small personal wiki system
+

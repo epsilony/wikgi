@@ -1,0 +1,51 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="stylesheet" href="{% static 'wikgi/css/solarized-light-no-font.min.css' %}" />
+	<link rel="stylesheet" href="{% static 'wikgi/css/pygments.css' %}" />
+	<script type="text/javascript" src="{% static 'wikgi/javascript/jquery-2.1.1.min.js' %}"> </script>
+	<script type="text/javascript"
+  		src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+	</script>
+	
+	<style>
+		#mainContent{	
+			width:70%
+		}
+		#relContext {
+			width:30%
+		}
+	</style>
+</head>
+<body>
+<div id="colWrap">
+<div id="relContent_temp">
+		<a href="{% url 'wikgi:index' %}">index</a>
+		{% for up_article_name in up_article_names %}
+			<a href="{% url 'wikgi:article' up_article_name %}">{{ up_article_name }}</a>
+		{% endfor %}
+	
+		<form name="edit it" action="{% url 'wikgi:article' article_name %}" id="editorTriggerForm_temp" method="post">
+			{% csrf_token %}
+			<input type="submit" value="Edit!">
+		</form>
+	</div>
+	<div id="mainContent">
+		{{ markdown_html|safe }}
+	</div>
+	<div id="relContent">
+		<a href="{% url 'wikgi:index' %}">index</a>
+		{% for up_article_name in up_article_names %}
+			<a href="{% url 'wikgi:article' up_article_name %}">{{ up_article_name }}</a>
+		{% endfor %}
+	
+		<form name="edit it" action="{% url 'wikgi:article' article_name %}" id="editorTriggerForm" method="post">
+			{% csrf_token %}
+			<input type="submit" value="Edit!">
+		</form>
+	</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="stylesheet" href="{% static 'wikgi/css/solarized-light-no-font.min.css' %}" />
+	<link rel="stylesheet" href="{% static 'wikgi/css/pygments.css' %}" />
+	<script type="text/javascript"
+  		src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+	</script>
+</head>
+<body>
+<div>
+<h1> all wikgi articles:</h1>
+{% if articles %}
+    <ul>
+    {% for article in articles %}
+        <li><a href="{% url 'wikgi:article' article %}">{{ article }}</a></li>
+    {% endfor %}
+    </ul>
+{% endif %}
+</div>
+</body>
+</html>
