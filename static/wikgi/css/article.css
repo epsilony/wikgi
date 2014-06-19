@@ -1,0 +1,106 @@
+@font-face {
+	font-family: 'WenQuanYi Micro Hei Light';
+	src: url(../../font/wqy-microhei-lite.ttf);
+	font-style: light;
+}
+
+@font-face {
+	font-family: 'Open Sans Condensed';
+	src: url(../../font/OpenSans-CondLight.ttf),
+		url(../../font/OpenSans-CondBold.ttf),
+		url(../../font/OpenSans-CondLightItalic.ttf);
+}
+
+@font-face {
+	font-family: 'Open Sans Light';
+	src: url(../../font/OpenSans-Light.ttf),
+		url(../../font/OpenSans-LightItalic.ttf);
+	font-style: light;
+}
+
+html {
+	background-color: #eee8d5;
+	color: #657b83;
+	margin: 1em;
+	font-family: 'Open Sans Light', 'WenQuanYi Micro Hei Light', sans-serif;
+	font-weight: light;
+}
+
+body {
+	background-color: #fdf6e3;
+	margin: 0 auto;
+	max-width: 23cm;
+	padding: 1em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	color: #b58900;
+	font-family: 'Open Sans Condensed'; font-style : normal;
+	font-weight: 300;
+	font-style: normal;
+}
+
+h1, h2, h3 {
+	border-bottom-color: #657b83;
+	border-bottom-style: solid;
+}
+
+h1 {
+	font-size: 3em;
+	border-bottom-width: 2px;
+}
+
+h2 {
+	font-size: 2.6em;
+	border-bottom-width: 1px;
+}
+
+h3 {
+	font-size: 2.2em; border-bottom-width : 1px;
+	display: inline;
+	border-bottom-width: 1px;
+}
+
+h4 {
+	font-size: 1.8em;
+}
+
+h5 {
+	font-size: 1.4em;
+}
+
+h6 {
+	font-size: 1em;
+}
+
+pre, code {
+	font-family: 'Droid Sans Mono', monospace;
+	background-color: #eee8d5;
+	color: #586e75;
+	background-color: #eee8d5;
+	font-size: 80%;
+}
+
+pre {
+	padding: 1em;
+	overflow: auto;
+}
+
+strong {
+	font-style: bold;
+}
+
+a {
+	color: #b58900;
+}
+
+img .is-round-corner{
+	overflow:clip;
+	border-radius:10px;
+}
+
+::selection {
+	background: #ff5e99;
+	color: #fff;
+	text-shadow: none;
+}

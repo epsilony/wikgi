@@ -2,25 +2,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<link rel="stylesheet" href="{% static 'wikgi/css/solarized-light-no-font.min.css' %}" />
-	<link rel="stylesheet" href="{% static 'wikgi/css/pygments.css' %}" />
-	<script type="text/javascript" src="{% static 'wikgi/javascript/jquery-2.1.1.min.js' %}"> </script>
-	<script type="text/javascript"
-  		src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-	</script>
+
+{% include "wikgi/common_input.html" %}
 	
 	<style>
 		#mainContent{	
-			width:70%
+			width:80%;
+			float:left;
 		}
-		#relContext {
-			width:30%
+		#relContent {
+			float:left;
+			width:20%;
+		}
+		
+		.is-clear-both{
+		left:80%;
+			clear:both;
 		}
 	</style>
 </head>
 <body>
 <div id="colWrap">
-<div id="relContent_temp">
+	<div id="relContent_temp">
 		<a href="{% url 'wikgi:index' %}">index</a>
 		{% for up_article_name in up_article_names %}
 			<a href="{% url 'wikgi:article' up_article_name %}">{{ up_article_name }}</a>
@@ -45,7 +48,9 @@
 			<input type="submit" value="Edit!">
 		</form>
 	</div>
+	<div class="is-clear-both"></div>
 </div>
+
 
 </body>
 </html>
