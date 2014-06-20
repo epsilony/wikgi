@@ -1,8 +1,11 @@
+
+/*
 @font-face {
-	font-family: 'WenQuanYi Micro Hei Light';
-	src: url(../../font/wqy-microhei-lite.ttf);
-	font-style: light;
+	font-family: 'WenQuanYi Micro Hei';
+	src: url(../../font/WenQuanYiMicroHei.ttf);
+	font-weight:200;
 }
+*/
 
 @font-face {
 	font-family: 'Open Sans Condensed';
@@ -15,15 +18,13 @@
 	font-family: 'Open Sans Light';
 	src: url(../../font/OpenSans-Light.ttf),
 		url(../../font/OpenSans-LightItalic.ttf);
-	font-style: light;
 }
 
 html {
 	background-color: #eee8d5;
 	color: #657b83;
 	margin: 1em;
-	font-family: 'Open Sans Light', 'WenQuanYi Micro Hei Light', sans-serif;
-	font-weight: light;
+	font-family: 'Open Sans Light', 'WenQuanYi Micro Hei Light', 'WenQuanYi Micro Hei',sans-serif;
 }
 
 body {
@@ -35,9 +36,9 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
 	color: #b58900;
-	font-family: 'Open Sans Condensed'; font-style : normal;
+	font-family: 'Open Sans Condensed','WenQuanYi Micro Hei Light','WenQuanYi Micro Hei',sans-serif;
+	font-style : normal;
 	font-weight: 300;
-	font-style: normal;
 }
 
 h1, h2, h3 {
@@ -84,10 +85,11 @@ pre, code {
 pre {
 	padding: 1em;
 	overflow: auto;
+	border-radius: 10px;
 }
 
 strong {
-	font-style: bold;
+	font-weight: bold;
 }
 
 a {
@@ -95,8 +97,13 @@ a {
 }
 
 img .is-round-corner{
-	overflow:clip;
 	border-radius:10px;
+}
+
+::-moz-selection{
+	background: #ff5e99;
+	color: #fff;
+	text-shadow: none;
 }
 
 ::selection {
