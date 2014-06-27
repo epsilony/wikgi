@@ -1,0 +1,239 @@
+{% load staticfiles %}
+
+<div id="editor-house" class="is-hidden">
+	<pre id="editor-pre"></pre>
+	<button type="button" id="editor-preview-bn">preview</button>
+	<button type="button" id="editor-preview-close-bn">close-preview</button>
+	<button type="button" id="editor-save-bn">save</button>
+	<button type="button" id="editor-close-bn">close</button>
+	<button type="button" id="editor-force-close-bn" class="is-hidden">FORCE
+		close!</button>
+	<div id="editor-preview-div" class="is-hidden">
+		<h1 id="editor-preview-head">Preview:</h1>
+		<div id="editor-preview-zone"></div>
+	</div>
+</div>
+
+<div id="editor-port" class="is-hidden"></div>
+
+<style>
+#editor-preview-div {
+	border-style: solid;
+	border-width: 2px;
+}
+</style>
+
+<script type="text/javascript"
+	data-ace-base="{% static 'javascript/ace' %}"
+	src="{% static 'javascript/ace/ace.js' %}"></script>
+
+<script src="{% static 'javascript/ace/keybinding-emacs.js' %}"></script>
+
+<script>
+	$(function() {
+		var editor = ace.edit("editor-pre");
+		editor.getSession().setMode("ace/mode/markdown");
+		var emacsHandler = ace.require("ace/keyboard/emacs").handler;
+		editor.setKeyboardHandler(emacsHandler);
+		var editorPre = $('#editor-pre');
+		editorPre.data("editor", editor);
+		editorPre.height(400);
+		editorPre.resizable();
+
+		editorPre.resize(function(event, ui) {
+			editor.resize()
+		})
+	})
+</script>
+
+<script type="text/javascript">
+	//csrf django jQuery ajax setup
+	function getCookie(name) {
+		var cookieValue = null;
+		if (document.cookie && document.cookie != '') {
+			var cookies = document.cookie.split(';');
+			for (var i = 0; i < cookies.length; i++) {
+				var cookie = jQuery.trim(cookies[i]);
+				// Does this cookie string begin with the name we want?
+				if (cookie.substring(0, name.length + 1) == (name + '=')) {
+					cookieValue = decodeURIComponent(cookie
+							.substring(name.length + 1));
+					break;
+				}
+			}
+		}
+		return cookieValue;
+	}
+	var csrftoken = getCookie('csrftoken');
+
+	function csrfSafeMethod(method) {
+		// these HTTP methods do not require CSRF protection
+		return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+	}
+
+	$(function() {
+		$.ajaxSetup({
+			beforeSend : function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+	})
+</script>
+
+<script type="text/javascript">
+	function mainHs() {
+		return $("#mainContent h1,h2,h3,h4,h5,h6").not(
+				"#editor-house,#editor-house *");
+	}
+
+	function onHeadDblClicked(event) {
+		if (!$("#editor-house").hasClass("is-hidden")) {
+			return
+		}
+		var target = $(event.target);
+		refreshEditor(target)
+	}
+	
+	function refreshEditor(target){
+		var hs = mainHs()
+		var hIndex = hs.index(target);
+		$.ajax({
+			type : "POST",
+			url : "{% url 'wikgi:article' article_name %}",
+			data : {
+				view_type : 'get_h_markdown',
+				h_index : hIndex,
+			},
+			success : function(data) {
+				if (!data.success) {
+					return
+
+				}
+
+				var editorHouse = $("#editor-house");
+				target.before(editorHouse);
+				var editorPre = $("#editor-pre");
+				var editor = editorPre.data("editor");
+
+				editor.setValue(data.markdown_piece);
+				editorHouse.removeClass("is-hidden");
+				editorPre.data("hIndex", hIndex);
+				editorPre.data("lastMarkdown", data.markdown_piece)
+				$("#editor-force-close-bn").addClass("is-hidden")
+			}
+		})
+	}
+
+	function onEditorSave(event) {
+		var editorPre = $("#editor-pre");
+		var editor = editorPre.data("editor");
+		var hIndex = editorPre.data("hIndex");
+		var hs = mainHs();
+
+		lastMarkdown = editorPre.data("lastMarkdown")
+		if (editor.getValue() == lastMarkdown) {
+			$("#editor-force-close-bn").addClass("is-hidden")
+			return
+
+		}
+		$.ajax({
+			type : "POST",
+			url : "{% url 'wikgi:article' article_name %}",
+			data : {
+				view_type : 'replace_h_markdown',
+				h_index : hIndex,
+				new_markdown_piece : editor.getValue(),
+			},
+			success : function(data) {
+				if (!data.success) {
+					return
+
+				}
+
+				var h = hs.eq(hIndex)
+				var until;
+				if (hIndex == hs.length - 1) {
+					until = $("#mainContent");
+				} else {
+					until = $("#mainContent")
+					h_lv = h.prop("tagName")[1]
+					for (var i = hIndex + 1; i < hs.length; i += 1) {
+						var th = hs.eq(i)
+						tag_lv = th.prop("tagName")[1]
+						if (tag_lv <= h_lv) {
+							until = th;
+							break;
+						}
+					}
+				}
+
+				h.nextUntil(until).remove()
+				h.after($(data.markdown_html))
+				hs = mainHs();
+				hNew = hs.eq(hIndex + 1)
+				hNew.before($("#editor-house"))
+				h.remove()
+				
+				refreshEditor(hNew)
+				mainHs().dblclick(onHeadDblClicked)
+			}
+		});
+	}
+
+	function onEditorClose(event) {
+		var editorPre = $("#editor-pre");
+		var editor = editorPre.data("editor");
+
+		lastMarkdown = editorPre.data("lastMarkdown")
+		editorValue = editor.getValue()
+		if (lastMarkdown != editorValue) {
+			$("#editor-force-close-bn").removeClass("is-hidden")
+			return
+		}
+		closeEditor();
+	}
+
+	function closeEditor() {
+		$("#editor-preview-div").addClass("is-hidden")
+		$("#editor-house").addClass("is-hidden")
+		$("#editor-force-close-bn").addClass("is-hidden")
+		$("#editor-port").append("#editor-house")
+		var editorPre=$("#editor-pre")
+		editorPre.data("hIndex", '');
+		editorPre.data("lastMarkdown", '')
+	}
+
+	function onEditorPreview(event) {
+		var editorPre = $("#editor-pre");
+		var editor = editorPre.data("editor");
+		$.ajax({
+			type : "POST",
+			url : "{% url 'wikgi:article' article_name %}",
+			data : {
+				view_type : 'get_markdown_html',
+				markdown_text : editor.getValue(),
+			},
+			success : function(data) {
+				if (!data.success) {
+					return
+
+				}
+				$("#editor-preview-zone").html(data.markdown_html)
+				$("#editor-preview-div").removeClass("is-hidden")
+			}
+		});
+	}
+
+	$(function() {
+		mainHs().dblclick(onHeadDblClicked);
+		$("#editor-save-bn").click(onEditorSave)
+		$("#editor-close-bn").click(onEditorClose)
+		$("#editor-preview-bn").click(onEditorPreview)
+		$("#editor-preview-close-bn").click(function() {
+			$("#editor-preview-div").addClass("is-hidden")
+		})
+		$("#editor-force-close-bn").click(closeEditor)
+	})
+</script>

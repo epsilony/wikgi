@@ -100,6 +100,10 @@ img .is-round-corner{
 	border-radius:10px;
 }
 
+.is-hidden{
+	display:none;
+}
+
 ::-moz-selection{
 	background: #ff5e99;
 	color: #fff;
