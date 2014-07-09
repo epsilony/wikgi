@@ -23,21 +23,26 @@
 </head>
 <body>
 <div id="colWrap">
+	<div id="relContent_temp">
+		<a href="{% url 'wikgi:index' %}">index</a>
+		{% for up_article_name in up_article_names %}
+			<a href="{% url 'wikgi:article' up_article_name %}">{{ up_article_name }}</a>
+		{% endfor %}
+	</div>
 	<div id="mainContent">
-		{{ markdown_html|safe }}
+		<div>
+		<form action="{% url 'wikgi:article' article_name %}" method="post">
+			{% csrf_token %}
+			<input type="hidden" name="create" value="true">
+			<input type="submit" value="create">
+		</form>
+		</div>
 	</div>
 	<div id="relContent">
 		<a href="{% url 'wikgi:index' %}">index</a>
 		{% for up_article_name in up_article_names %}
 			<a href="{% url 'wikgi:article' up_article_name %}">{{ up_article_name }}</a>
 		{% endfor %}
-		<div>
-		<form action="{% url 'wikgi:article' article_name %}" method="post">
-			{% csrf_token %}
-			<input type="hidden" name="add_h1" value="true">
-			<input type="submit" value="add h1">
-		</form>
-		</div>
 	</div>
 	<div class="is-clear-both"></div>
 </div>

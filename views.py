@@ -28,23 +28,55 @@ def index_view(request):
     articles = get_all_articles()
     return render(request, 'wikgi/index.html', {'articles':articles})
 
+
+
+
+
 def article(request, article_name):
     if request.is_ajax():
         return _article_ajax(request, article_name)
     
     path = get_article_path(article_name)
-    if not path.exists() or not path.is_file():
+    
+    if not path.exists():
+        if request.method=='POST' and request.POST.get('create'):
+            _create_blank_md(path)
+        else:
+            return blank_article(request,article_name)
+    if not path.exists():
         raise Http404
+    
+    if request.method=='POST' and request.POST.get('add_h1'):
+        _add_new_h1(path)
     
     markdown_html = get_article_html(article_name)
     
     return render(request, 'wikgi/article.html',
                   {'markdown_html':markdown_html,
                    'article_name':article_name,
+                   'up_article_names':get_up_article_names(article_name),})
+
+def blank_article(request,article_name):
+    return render(request,'wikgi/blank.html',{
+                                               'article_name':article_name,
                    'up_article_names':get_up_article_names(article_name),
-                   'form':ArticleEditorForm()})
-
-
+                                               })
+def _create_blank_md(path):
+    if path.exists():
+        return
+    if not path.parent.exists():
+        path.parent.mkdir(parents=True)
+    with path.open('w') as f:
+        f.write(r'''
+# new article
+''')
+        
+def _add_new_h1(path):
+    with path.open() as f:
+        markdown_text = f.read()
+    with path.open('w') as f:
+        f.write('# new head\n')
+        f.write(markdown_text)
 
 def _article_ajax(request, article_name):
     if request.method == 'GET':
@@ -97,10 +129,7 @@ def _article_get_markdown_html(request, article_name):
     return JsonResponse({'success':True, 'markdown_html':markdown_html})
 
 def _article_ajax_fail():
-    return JsonResponse({"success":False})
-
-class ArticleEditorForm(forms.Form):
-    pass   
+    return JsonResponse({"success":False})  
 
 def media(request, media_file_url):
     pth = get_media_path(media_file_url)
