@@ -180,6 +180,7 @@
 				mainHs().dblclick(onHeadDblClicked)
 			}
 		});
+		MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
 	}
 
 	function onEditorClose(event) {
@@ -193,6 +194,7 @@
 			return
 		}
 		closeEditor();
+		MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
 	}
 
 	function closeEditor() {
@@ -222,8 +224,10 @@
 				}
 				$("#editor-preview-zone").html(data.markdown_html)
 				$("#editor-preview-div").removeClass("is-hidden")
+				MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
 			}
 		});
+		
 	}
 
 	$(function() {
