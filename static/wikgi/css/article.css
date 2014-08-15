@@ -5,7 +5,7 @@
 	src: url(../../font/WenQuanYiMicroHei.ttf);
 	font-weight:200;
 }
-*/
+
 
 @font-face {
 	font-family: 'Open Sans Condensed';
@@ -19,12 +19,13 @@
 	src: url(../../font/OpenSans-Light.ttf),
 		url(../../font/OpenSans-LightItalic.ttf);
 }
+*/
 
 html {
 	background-color: #eee8d5;
 	color: #657b83;
 	margin: 1em;
-	font-family: 'Open Sans Light', 'WenQuanYi Micro Hei Light', 'WenQuanYi Micro Hei',sans-serif;
+	font-family: 'Source Han Sans CN Light', 'WenQuanYi Micro Hei Light', 'WenQuanYi Micro Hei',sans-serif;
 }
 
 body {
@@ -36,7 +37,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
 	color: #b58900;
-	font-family: 'Open Sans Condensed','WenQuanYi Micro Hei Light','WenQuanYi Micro Hei',sans-serif;
+	font-family: 'Source Han Sans CN','WenQuanYi Micro Hei Light','WenQuanYi Micro Hei',sans-serif;
 	font-style : normal;
 	font-weight: 300;
 }
